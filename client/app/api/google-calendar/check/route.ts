@@ -4,9 +4,13 @@ import { google } from 'googleapis';
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID;
 
+if (!process.env.GOOGLE_CLIENT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY || !CALENDAR_ID) {
+  throw new Error('Missing required Google Calendar credentials in environment variables');
+}
+
 const CREDENTIALS = {
   client_email: process.env.GOOGLE_CLIENT_EMAIL,
-  private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+  private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
 };
 
 const auth = new google.auth.JWT(
