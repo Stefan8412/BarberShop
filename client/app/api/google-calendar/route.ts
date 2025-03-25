@@ -29,8 +29,16 @@ export async function POST(request: Request) {
   try {
     const { date, time, userData } = await request.json();
     
-    const startTime = new Date(`${date}T${time}`);
-    const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hora después
+    // Ensure time has proper format with leading zeros
+    const formattedTime = time.padStart(8, '0');
+    const dateTimeString = `${date}T${formattedTime}`;
+    
+    const startTime = new Date(dateTimeString);
+    if (isNaN(startTime.getTime())) {
+      throw new Error(`Invalid date or time format: ${dateTimeString}`);
+    }
+    
+    const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour later
 
     const event = {
       summary: `Reserva de ${userData.name}`,
