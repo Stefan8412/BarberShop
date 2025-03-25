@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import CREDENTIALS from '../../../../service-account.json';
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
-const CALENDAR_ID = 'aa5d76db5373694924c1ad6fb716e6c406c67d3c4662737093bf6a80a6573ed6@group.calendar.google.com';
+const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID;
+
+const CREDENTIALS = {
+  client_email: process.env.GOOGLE_CLIENT_EMAIL,
+  private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+};
 
 const auth = new google.auth.JWT(
   CREDENTIALS.client_email,
