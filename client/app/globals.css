@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+/* Cambiar color de fuente del calendario a negro */
+.rdp {
+  color: #000000;
+  /* Esto establece el color del texto del calendario a negro */
+}
+
+.rdp .rdp-day {
+  color: #000000;
+  /* Esto asegura que los días también tengan color negro */
+}
+
+.rdp .rdp-day:hover {
+  background-color: #f0f0f0;
+  /* Puedes personalizar el color de fondo al hacer hover */
+}
+
+.rdp .rdp-day_selected {
+  background-color: #000000;
+  /* Color de fondo cuando el día está seleccionado */
+  color: #ffffff;
+  /* Color del texto cuando el día está seleccionado */
+}
+
+.rdp-day[aria-disabled="true"] {
+  color: #EF4444 !important;
+  text-decoration: none !important;
+  opacity: 1 !important;
+}
+
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
