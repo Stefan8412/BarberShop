@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
-import { google } from 'googleapis';
+import { NextResponse } from "next/server";
+import { google } from "googleapis";
 
-const SCOPES = ['https://www.googleapis.com/auth/calendar'];
+const SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
 const credentials = {
   type: process.env.GOOGLE_TYPE,
@@ -13,7 +13,7 @@ const credentials = {
   auth_uri: process.env.GOOGLE_AUTH_URI,
   token_uri: process.env.GOOGLE_TOKEN_URI,
   auth_provider_x509_cert_url: process.env.GOOGLE_AUTH_PROVIDER_X509_CERT_URL,
-  client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL
+  client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL,
 };
 
 const auth = new google.auth.JWT(
@@ -23,41 +23,41 @@ const auth = new google.auth.JWT(
   SCOPES
 );
 
-const calendar = google.calendar({ version: 'v3', auth });
+const calendar = google.calendar({ version: "v3", auth });
 
 export async function POST(request: Request) {
   try {
     const { date, time, userData } = await request.json();
-    
+
     // Ensure time has proper format with leading zeros
-    const formattedTime = time.padStart(8, '0');
+    const formattedTime = time.padStart(8, "0");
     const dateTimeString = `${date}T${formattedTime}`;
-    
+
     const startTime = new Date(dateTimeString);
     if (isNaN(startTime.getTime())) {
       throw new Error(`Invalid date or time format: ${dateTimeString}`);
     }
-    
+
     const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour later
 
     const event = {
-      summary: `Reserva de ${userData.name}`,
-      description: `Cliente: ${userData.name}\nTeléfono: ${userData.phone}`,
+      summary: `Rezervacia ${userData.name}`,
+      description: `Klient: ${userData.name}\nMobil: ${userData.phone}`,
       start: {
         dateTime: startTime.toISOString(),
-        timeZone: 'America/Argentina/Buenos_Aires',
+        timeZone: "America/Argentina/Buenos_Aires",
       },
       end: {
         dateTime: endTime.toISOString(),
-        timeZone: 'America/Argentina/Buenos_Aires',
+        timeZone: "America/Argentina/Buenos_Aires",
       },
       reminders: {
         useDefault: false,
         overrides: [
-          { method: 'popup', minutes: 30 },
-          { method: 'email', minutes: 30 }
-        ]
-      }
+          { method: "popup", minutes: 30 },
+          { method: "email", minutes: 30 },
+        ],
+      },
     };
 
     const response = await calendar.events.insert({
@@ -68,9 +68,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ eventId: response.data.id });
   } catch (err) {
     return NextResponse.json(
-      { error: 'Error al procesar la reserva: ', err },
+      { error: "Chyba pri spracovaní rezervácie: ", err },
       { status: 500 }
     );
   }
 }
-

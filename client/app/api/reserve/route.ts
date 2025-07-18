@@ -10,12 +10,15 @@ export async function POST(req: Request) {
     const { date, time } = await req.json();
 
     if (!date || !time) {
-      console.log('Faltan datos: ', { date, time });
-      return NextResponse.json({ error: "Fecha y hora requeridas" }, { status: 400 });
+      console.log("Faltan datos: ", { date, time });
+      return NextResponse.json(
+        { error: "Požadovaný dátum a čas" },
+        { status: 400 }
+      );
     }
 
     const eventDateTime = new Date(`${date}T${time}:00`);
-    console.log('Fecha y hora del evento: ', eventDateTime);
+    console.log("Dátum a čas podujatia: ", eventDateTime);
 
     const auth = new google.auth.GoogleAuth({
       keyFile: KEY_FILE_PATH,
@@ -25,26 +28,28 @@ export async function POST(req: Request) {
     const calendar = google.calendar({ version: "v3", auth });
 
     const event = {
-      summary: "Reserva en BarberShop",
-      description: "Turno reservado desde la app",
+      summary: "Rezervácia BarberShop",
+      description: "Termín rezervovaný cez aplikáciu",
       start: {
         dateTime: eventDateTime.toISOString(),
         timeZone: "Europe/Madrid",
       },
       end: {
-        dateTime: new Date(eventDateTime.getTime() + 60 * 60 * 1000).toISOString(),
+        dateTime: new Date(
+          eventDateTime.getTime() + 60 * 60 * 1000
+        ).toISOString(),
         timeZone: "Europe/Madrid",
       },
     };
 
-    console.log('Evento a agregar: ', event);
+    console.log("Evento a agregar: ", event);
 
     const response = await calendar.events.insert({
       calendarId: "primary",
       requestBody: event,
     });
 
-    console.log('Evento creado: ', response.data);
+    console.log("Evento creado: ", response.data);
 
     return NextResponse.json({ success: true, eventId: response.data.id });
   } catch (error) {
@@ -52,4 +57,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "No se pudo reservar" }, { status: 500 });
   }
 }
-
