@@ -274,7 +274,7 @@ export default function CalendarComponent() {
               : "bg-green-50/80 text-green-700 hover:bg-green-100 hover:shadow-md hover:scale-105"
           }`}
                     >
-                      {time} hs
+                      {time}
                     </button>
                   ))}
               </div>
