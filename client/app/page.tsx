@@ -4,7 +4,7 @@ import "./globals.css";
 import "react-day-picker/dist/style.css";
 import { DayPicker } from "react-day-picker";
 import { useState } from "react";
-import { es, sk } from "date-fns/locale";
+import { sk } from "date-fns/locale";
 import { format, startOfDay, isSameDay } from "date-fns";
 import { Banner } from "./components/Banner";
 
