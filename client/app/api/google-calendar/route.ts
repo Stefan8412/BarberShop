@@ -45,11 +45,11 @@ export async function POST(request: Request) {
       description: `Klient: ${userData.name}\nMobil: ${userData.phone}`,
       start: {
         dateTime: startTime.toISOString(),
-        timeZone: "America/Argentina/Buenos_Aires",
+        timeZone: "Europe/Madrid",
       },
       end: {
         dateTime: endTime.toISOString(),
-        timeZone: "America/Argentina/Buenos_Aires",
+        timeZone: "Europe/Madrid",
       },
       reminders: {
         useDefault: false,
