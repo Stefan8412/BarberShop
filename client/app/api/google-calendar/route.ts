@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     const { date, time, userData } = await request.json();
 
     // Ensure time has proper format with leading zeros
-    const formattedTime = time.padStart(8, "0");
+    //const formattedTime = time.padStart(8, "0");
 
     const startTime = DateTime.fromISO(`${date}T${time}`, {
       zone: "Europe/Madrid",
