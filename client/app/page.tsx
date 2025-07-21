@@ -24,8 +24,8 @@ export default function CalendarComponent() {
   const disabledDays = [{ before: new Date() }, { dayOfWeek: [0] }];
 
   const times = [
-    "9:00",
-    "9:45",
+    "09:00",
+    "09:45",
     "10:30",
     "11:15",
     "12:00",
