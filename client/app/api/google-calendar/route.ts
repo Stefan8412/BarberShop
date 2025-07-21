@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { google } from "googleapis";
+import { DateTime } from "luxon";
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
@@ -31,24 +32,24 @@ export async function POST(request: Request) {
 
     // Ensure time has proper format with leading zeros
     const formattedTime = time.padStart(8, "0");
-    const dateTimeString = `${date}T${formattedTime}`;
 
-    const startTime = new Date(dateTimeString);
-    if (isNaN(startTime.getTime())) {
-      throw new Error(`Invalid date or time format: ${dateTimeString}`);
+    const startTime = DateTime.fromISO(`${date}T${time}`, {
+      zone: "Europe/Madrid",
+    });
+    if (!startTime.isValid) {
+      throw new Error(`Invalid date/time: ${startTime.invalidExplanation}`);
     }
-
-    const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour later
+    const endTime = startTime.plus({ minutes: 45 }); // or 45 if needed
 
     const event = {
       summary: `Rezervacia ${userData.name}`,
       description: `Klient: ${userData.name}\nMobil: ${userData.phone}`,
       start: {
-        dateTime: startTime.toISOString(),
+        dateTime: startTime.toISO(),
         timeZone: "Europe/Madrid",
       },
       end: {
-        dateTime: endTime.toISOString(),
+        dateTime: endTime.toISO(),
         timeZone: "Europe/Madrid",
       },
       reminders: {
