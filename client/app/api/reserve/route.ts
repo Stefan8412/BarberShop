@@ -1,6 +1,7 @@
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 import path from "path";
+import { DateTime } from "luxon";
 
 const KEY_FILE_PATH = path.join(process.cwd(), "service-account.json");
 const SCOPES = ["https://www.googleapis.com/auth/calendar.events"];
@@ -17,7 +18,9 @@ export async function POST(req: Request) {
       );
     }
 
-    const eventDateTime = new Date(`${date}T${time}:00`);
+    const eventDateTime = DateTime.fromISO(`${date}T${time}`, {
+      zone: "Europe/Madrid",
+    });
     console.log("Dátum a čas podujatia: ", eventDateTime);
 
     const auth = new google.auth.GoogleAuth({
@@ -31,13 +34,11 @@ export async function POST(req: Request) {
       summary: "Rezervácia BarberShop",
       description: "Termín rezervovaný cez aplikáciu",
       start: {
-        dateTime: eventDateTime.toISOString(),
+        dateTime: eventDateTime.toISO(),
         timeZone: "Europe/Madrid",
       },
       end: {
-        dateTime: new Date(
-          eventDateTime.getTime() + 60 * 60 * 1000
-        ).toISOString(),
+        dateTime: eventDateTime.plus({ hours: 1 }).toISO(),
         timeZone: "Europe/Madrid",
       },
     };
