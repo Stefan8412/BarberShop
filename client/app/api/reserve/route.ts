@@ -38,7 +38,7 @@ export async function POST(req: Request) {
         timeZone: "Europe/Madrid",
       },
       end: {
-        dateTime: eventDateTime.plus({ hours: 1 }).toISO(),
+        dateTime: eventDateTime.plus({ minutes: 45 }).toISO(),
         timeZone: "Europe/Madrid",
       },
     };
