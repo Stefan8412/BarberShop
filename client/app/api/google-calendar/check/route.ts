@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { google } from "googleapis";
+import { DateTime } from "luxon";
 
 const SCOPES = ["https://www.googleapis.com/auth/calendar"];
 const CALENDAR_ID = process.env.GOOGLE_CALENDAR_ID;
@@ -47,12 +48,15 @@ export async function POST(request: Request) {
     });
 
     const bookedTimes =
-      response.data.items?.map((event) => {
-        const startTime = new Date(event.start?.dateTime || "");
-        const hours = startTime.getHours().toString().padStart(2, "0");
-        const minutes = startTime.getMinutes().toString().padStart(2, "0");
-        return `${hours}:${minutes}`;
-      }) || [];
+      response.data.items
+        ?.map((event) => {
+          const startTimeISO = event.start?.dateTime;
+          if (!startTimeISO) return null;
+
+          const dt = DateTime.fromISO(startTimeISO, { zone: "Europe/Madrid" });
+          return dt.toFormat("HH:mm");
+        })
+        .filter(Boolean) || [];
 
     return NextResponse.json({ bookedTimes });
   } catch (error) {
