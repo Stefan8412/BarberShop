@@ -18,9 +18,9 @@ export function Banner() {
           </svg>
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white">Slavo Magera</h1>
-          <p className="text-gray-400 text-sm">+421940563195</p>
-          <p className="text-gray-400 text-sm">Budovateľská 34/A, BARBERIA</p>
+          <h1 className="text-2xl font-bold text-white">BarberShop</h1>
+          <p className="text-gray-400 text-sm">+42915310692</p>
+          <p className="text-gray-400 text-sm">Hlavna 123, 040 01 Košice</p>
         </div>
       </div>
     </div>

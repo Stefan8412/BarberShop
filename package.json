@@ -1,0 +1,13 @@
+{
+  "name": "barbershop",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix client run start",
+    "test": "npm --prefix client test",
+    "staff:password": "npm --prefix client run staff:password",
+    "staff:setup": "npm --prefix client run staff:setup"
+  }
+}
