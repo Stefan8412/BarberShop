@@ -33,8 +33,8 @@ export function getBarbers(): Barber[] {
       ? JSON.parse(process.env.BARBERS_JSON)
       : [
           {
-            id: "adam",
-            name: "Adam",
+            id: "martin",
+            name: "Martin",
             calendarId:
               process.env.GOOGLE_CALENDAR_ADAM_ID ||
               process.env.GOOGLE_CALENDAR_ID ||
@@ -42,14 +42,14 @@ export function getBarbers(): Barber[] {
             tier: "senior",
           },
           {
-            id: "barberina",
-            name: "Barberina",
+            id: "barber",
+            name: "Barber",
             calendarId: process.env.GOOGLE_CALENDAR_JURAJ_ID || "",
             tier: "senior",
           },
           {
-            id: "martin-centko",
-            name: "Martin Centko",
+            id: "stefan",
+            name: "Stefan",
             calendarId: process.env.GOOGLE_CALENDAR_STEFAN_ID || "",
             tier: "barber",
           },
@@ -57,32 +57,68 @@ export function getBarbers(): Barber[] {
   } catch {
     throw new AppError("Konfigurácia kaderníkov nie je správna.", 503);
   }
-  const source = process.env.BARBERS_JSON ? "BARBERS_JSON" : "client/lib/booking.ts";
+  const source = process.env.BARBERS_JSON
+    ? "BARBERS_JSON"
+    : "client/lib/booking.ts";
   if (!Array.isArray(value) || value.length === 0) {
-    throw new AppError(`V ${source} musí byť zoznam aspoň jedného kaderníka.`, 503);
+    throw new AppError(
+      `V ${source} musí byť zoznam aspoň jedného kaderníka.`,
+      503,
+    );
   }
   for (const [index, barber] of value.entries()) {
-    const label = typeof barber?.name === "string" && barber.name.trim()
-      ? barber.name : `záznam ${index + 1}`;
-    if (!barber || typeof barber.id !== "string" || !/^[a-z0-9-]{1,40}$/.test(barber.id)) {
-      throw new AppError(`Kaderník ${label}: neplatné id v ${source}. Použite 1 až 40 malých písmen bez diakritiky, číslic alebo pomlčiek, bez medzier (napr. martin-centko).`, 503);
+    const label =
+      typeof barber?.name === "string" && barber.name.trim()
+        ? barber.name
+        : `záznam ${index + 1}`;
+    if (
+      !barber ||
+      typeof barber.id !== "string" ||
+      !/^[a-z0-9-]{1,40}$/.test(barber.id)
+    ) {
+      throw new AppError(
+        `Kaderník ${label}: neplatné id v ${source}. Použite 1 až 40 malých písmen bez diakritiky, číslic alebo pomlčiek, bez medzier (napr. martin-centko).`,
+        503,
+      );
     }
     if (typeof barber.name !== "string" || !barber.name.trim()) {
-      throw new AppError(`Kaderník s id ${barber.id}: doplňte meno v ${source}.`, 503);
+      throw new AppError(
+        `Kaderník s id ${barber.id}: doplňte meno v ${source}.`,
+        503,
+      );
     }
-    if (typeof barber.calendarId !== "string" || (barber.calendarId !== "" && !barber.calendarId.trim())) {
-      throw new AppError(`Kaderník ${label}: calendarId v ${source} musí byť text alebo prázdny reťazec.`, 503);
+    if (
+      typeof barber.calendarId !== "string" ||
+      (barber.calendarId !== "" && !barber.calendarId.trim())
+    ) {
+      throw new AppError(
+        `Kaderník ${label}: calendarId v ${source} musí byť text alebo prázdny reťazec.`,
+        503,
+      );
     }
-    if (barber.tier !== undefined && barber.tier !== "senior" && barber.tier !== "barber") {
-      throw new AppError(`Kaderník ${label}: tier v ${source} musí byť senior alebo barber.`, 503);
+    if (
+      barber.tier !== undefined &&
+      barber.tier !== "senior" &&
+      barber.tier !== "barber"
+    ) {
+      throw new AppError(
+        `Kaderník ${label}: tier v ${source} musí byť senior alebo barber.`,
+        503,
+      );
     }
   }
-  if (new Set(value.map(b => b.id)).size !== value.length) {
-    throw new AppError(`Každý kaderník musí mať jedinečné id v ${source}.`, 503);
+  if (new Set(value.map((b) => b.id)).size !== value.length) {
+    throw new AppError(
+      `Každý kaderník musí mať jedinečné id v ${source}.`,
+      503,
+    );
   }
-  const configured = value.filter(b => b.calendarId);
-  if (new Set(configured.map(b => b.calendarId)).size !== configured.length) {
-    throw new AppError(`Viacerí kaderníci používajú rovnaký kalendár v ${source}. Každý potrebuje vlastný kalendár.`, 503);
+  const configured = value.filter((b) => b.calendarId);
+  if (new Set(configured.map((b) => b.calendarId)).size !== configured.length) {
+    throw new AppError(
+      `Viacerí kaderníci používajú rovnaký kalendár v ${source}. Každý potrebuje vlastný kalendár.`,
+      503,
+    );
   }
   return value.map((b) => ({
     ...b,
